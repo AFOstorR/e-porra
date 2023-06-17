@@ -1,0 +1,35 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row text-center">
+    <label class="fs-2 fw-bold">Mis transacciones</label>
+  </div>
+  <div class="row">
+    <div class="col-2 text-center">
+      <button class="btn btn-warning" (click)="regresar()" id="btnCancelar">Regresar</button>
+    </div>
+    <div class="col-2 text-center">
+      <button *ngIf="mostrar_todo == false" [disabled]="transacciones?transacciones.length<6:0" class="btn btn-primary" (click)="verMas()" id="btnCancelar">Ver más</button>
+      <button *ngIf="mostrar_todo == true" class="btn btn-primary" (click)="verMenos()" id="btnCancelar">Ver menos</button>
+    </div>
+  </div>
+  <div class="row mt-5" >
+  </div>
+  <div class="row">
+    <table class="table table-hover table-bordered">
+      <thead class="table-light">
+        <tr>
+          <th scope="col" class="text-center">Fecha</th>
+          <th scope="col" class="text-center">Descripción</th>
+          <th scope="col" class="text-center">Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaccion of transacciones_mostrar">
+          <td>{{transaccion.fecha.slice(8, 10) + '/' + transaccion.fecha.slice(5,7) + '/' + transaccion.fecha.slice(0,4)}}</td>
+          <td>{{transaccion.descripcion.replace('Felicitaciones! ', '')}}</td>
+          <td>{{transaccion.valor.toLocaleString()}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

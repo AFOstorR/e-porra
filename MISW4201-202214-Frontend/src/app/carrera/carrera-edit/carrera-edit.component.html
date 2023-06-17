@@ -1,0 +1,138 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="card mx-3 my-5">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="mt-5 mb-2 fs-3 fw-bold">Editar evento</p>
+          </div>
+        </div>
+        <form class="mx-5 my-3"  *ngIf="carreraForm" [formGroup]="carreraForm" (ngSubmit)="editarCarrera(carreraForm.value)">
+          <div class="form-group my-2">
+            <div class="row">
+              <div class="col-2 text-start">
+                <label for="nombre">Nombre </label>
+              </div>
+              <div class="col-10">
+                <input type="text" class="form-control" formControlName="nombre" placeholder="Nombre del evento" id="nombre">
+              </div>
+            </div>
+
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div class="alert alert-danger my-3"
+                  *ngIf="carreraForm.get('nombre')?.hasError('required') && carreraForm.get('nombre')?.touched">
+                  Debe ingresar un nombre para el evento
+                </div>
+                <div class="alert alert-danger my-3" *ngIf="carreraForm.get('nombre')?.hasError('minlength')">
+                  El nombre debe tener por lo menos un carácter
+                </div>
+                <div class="alert alert-danger my-3" *ngIf="carreraForm.get('nombre')?.hasError('maxlength')">
+                  El nombre no debe exceder los 128 carácteres
+                </div>
+              </div>
+            </div>
+            <br>
+          </div>
+
+          <div class="form-group my-2">
+            <div class="row">
+              <div class="col-2 text-start">
+                <label for="nombre">Tipo </label>
+              </div>
+              <div class="col-10">
+                <select formControlName="tipo_evento" class="form-control" id="tipo_evento">
+                  <option value="">Selecciona el tipo...</option>
+                  <option *ngFor="let item of tipo_eventos" value="{{ item }}">
+                    {{ item }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div class="alert alert-danger my-3"
+                  *ngIf="carreraForm.get('tipo_evento')?.hasError('required') && carreraForm.get('tipo_evento')?.touched">
+                  Debe seleccionar el tipo de evento
+                </div>
+
+              </div>
+            </div>
+            <br>
+          </div>
+
+          <div class="card" *ngIf="carreraForm.get('tipo_evento')?.value != ''">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-12 text-center">
+                  <label class="fs-6">Competidores</label>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div *ngFor="let competidoresForm of competidorformArray.controls; let i = index"
+                style="font-size: 14px;">
+                <div [formGroup]="competidoresForm">
+                  <input formControlName="id" type="hidden" />
+                  <div class="row">
+                    <div class="col-6">
+                      <input type="text" class="form-control" formControlName="competidor" id="competidor{{i}}"
+                        placeholder="Nombre del competidor">
+                    </div>
+                    <div class="col-5">
+                      <input type="number" max="1" min="0" step="0.1" class="form-control" formControlName="probabilidad" id="probabilidad{{i}}"
+                        placeholder="Probabilidad de ganar">
+                    </div>
+                    <div class="col-1">
+                      <button *ngIf="i > 0 && carreraForm.get('tipo_evento')?.value =='CARRERA'" type="button" class="btn btn-danger btn-circle btn-sm" id="btnEliminar{{i}}"
+                        (click)="onRemoveCompetidor(i)"><i class="bi bi-trash-fill"></i></button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="row justify-content-center">
+                      <div class="col-12">
+                        <div class="alert alert-danger my-3"
+                          *ngIf="competidoresForm.get('competidor')?.hasError('required') && competidoresForm.get('competidor')?.touched">
+                          Debe ingresar un nombre para el competidor
+                        </div>
+                        <div class="alert alert-danger my-3"
+                          *ngIf="competidoresForm.get('competidor')?.hasError('minlength')">
+                          El nombre debe tener por lo menos un carácter
+                        </div>
+                        <div class="alert alert-danger my-3"
+                          *ngIf="competidoresForm.get('competidor')?.hasError('maxlength')">
+                          El nombre no debe exceder los 128 carácteres
+                        </div>
+                        <div class="alert alert-danger my-3"
+                          *ngIf="competidoresForm.get('probabilidad')?.hasError('max')">
+                          El valor ingresado no debe superar 1
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer" *ngIf="carreraForm.get('tipo_evento')?.value =='CARRERA'">
+              <button type="button" class="my-1 btn btn-success btn-sm" (click)="onAddCompetidor()" id="btnAgregar">Agregar
+                competidor</button>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-6 text-end">
+              <button class="btn btn-danger" (click)="cancelCreate()">Cancelar</button>
+            </div>
+            <div class="col-6 text-start">
+              <button type="submit" class="btn btn-warning" [disabled]="!carreraForm.valid" id="btnGuardar">Guardar cambios</button>
+            </div>
+          </div>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

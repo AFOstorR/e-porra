@@ -1,0 +1,49 @@
+name: Integrar branch temporales
+on:
+  push:
+    branches:
+      - tmp_**
+
+jobs:
+  job1:
+    if: ${{ startsWith(github.event.head_commit.message, 'Integracion') }}
+    name: Merge de desarrollo al ambiente de features tmp_
+    runs-on: ubuntu-latest
+    steps:
+      - name: git checkout release
+        uses: actions/checkout@v2
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Extraer branch name tmp_
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch_tmp
+
+      - name: Merge desarrollo -> tmp_
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: develop
+          target-branch: ${{ steps.extract_branch_tmp.outputs.branch }}
+
+  job2:
+    needs: job1
+    name: Merge del ambiente de features tmp_ a develop
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraer branch name tmp_
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch_tmp
+
+      - name: Merge temporal -> desarrollo
+        uses: tukasz/direct-merge-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          source-branch: ${{ steps.extract_branch_tmp.outputs.branch }}
+          target-branch: develop
+
+

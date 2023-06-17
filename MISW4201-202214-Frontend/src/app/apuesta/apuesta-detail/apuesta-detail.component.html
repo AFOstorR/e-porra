@@ -1,0 +1,40 @@
+<div class="container">
+
+  <div class="row">
+    <div class="col-12 text-center mb-2">
+      <label class="fs-4 fw-bold">Apuesta {{inputApuesta?.id}}</label>
+      <button *ngIf="inputApuesta && !esApostador" type="button" class="btn btn-outline-success ms-3 me-2" (click)="goToEdit()" id="btnEditar"
+        title="Editar apuesta"><i class="bi bi-pencil-square"></i></button>
+      <button *ngIf="inputApuesta && !esApostador" type="button" class="btn btn-outline-danger me-1" (click)="eliminarApuesta()" id="btnEliminar"
+        title="Eliminar apuesta"><i class="bi bi-trash-fill"></i></button>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row" *ngIf="inputApuesta">
+    <div class="col-12">
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" class="text-center">Evento</th>
+            <th scope="col" class="text-center">{{inputApuesta?.id_competidor? 'Competidor':'Marcador'}}</th>
+            <th scope="col" class="text-center">Apostador</th>
+            <th scope="col" class="text-center">Valor apostado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ carrera }}</td>
+            <td>{{ competidor }}</td>
+            <td>{{ inputApuesta?.nombre_apostador }}</td>
+            <td>{{ inputApuesta?.valor_apostado | number : "1.2-2" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="text-center" *ngIf="!inputApuesta">
+    <h6>Seleccione una apuesta para ver el detalle</h6>
+  </div>
+</div>

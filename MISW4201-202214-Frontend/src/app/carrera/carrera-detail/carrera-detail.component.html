@@ -1,0 +1,71 @@
+<div class="container">
+
+  <div class="row">
+    <div class="col-12 text-center mb-2">
+      <label class="fs-4 fw-bold">{{carrera?.nombre_evento}}</label>
+      <br>
+      <label class="fs-6">({{(carrera?.tipo_evento).toLowerCase()}})</label>
+      <div *ngIf="!user.es_apostador">
+        <button [disabled]="!carrera?.abierta" *ngIf="carrera" type="button" class="btn btn-outline-success ms-3 me-2" id="btnEditar"
+        (click)="goToEdit()" title="Editar carrera"><i class="bi bi-pencil-square"></i></button>
+        <button [disabled]="!carrera?.abierta" *ngIf="carrera" type="button" class="btn btn-outline-danger me-1" id="btnEliminar"
+        (click)="eliminarCarrera()" title="Eliminar carrera"><i class="bi bi-trash"></i></button>
+        <button *ngIf="carrera?.abierta == true && carrera?.apuestas.length > 0" type="button" id="btnTerminar"
+          class="btn btn-outline-success ms-1 me-2" (click)="terminarCarrera()" title="Terminar carrera"><i
+          class="bi bi-flag-fill"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mt-3 mb-2 ms-2">
+      <h5>Competidores</h5>
+    </div>
+    <div class="col-12">
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" class="text-center">Competidor</th>
+            <th scope="col" class="text-center">Probabilidad de ganar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let competidor of carrera?.competidores">
+            <td>{{competidor.nombre_competidor}}</td>
+            <td class="text-center">{{competidor.probabilidad | number:'1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  </div>
+
+  <div *ngIf="carrera?.apuestas.length > 0" class="row">
+    <div class="col-12 mt-3 mb-2 ms-2">
+      <h5>Apuestas</h5>
+    </div>
+    <div class="col-12">
+      <table class="table table-hover table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th scope="col" class="text-center">Apostador</th>
+            <th scope="col" class="text-center">{{carrera.tipo_evento == 'MARCADOR'? 'Marcador':'Competidor' }}</th>
+            <th scope="col" class="text-center">Valor apostado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let apuesta of carrera?.apuestas">
+            <td>{{apuesta.nombre_apostador}}</td>
+            <td class="text-center">{{ getCompetidor(apuesta.id_competidor) }}</td>
+            <td class="text-center">{{apuesta.valor_apostado | number:'1.2-2'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  
+</div>

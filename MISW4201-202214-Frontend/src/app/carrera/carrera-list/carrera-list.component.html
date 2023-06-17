@@ -1,0 +1,65 @@
+<app-header></app-header>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-10 text-center">
+              <label class="fs-4">Eventos</label>
+            </div>
+            <div class="col-2 text-center" *ngIf="!user.es_apostador">
+              <button type="button" class="my-1 btn btn-outline-warning btn-circle" (click)="irCrearCarrera()" id="btnIrCarrera"><i
+                  class="bi bi-plus-lg"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+
+          <div class="input-group my-2">
+            <input #busqueda type="search" class="form-control" placeholder="Buscar eventos" aria-label="Search" id="buscarCarrera"
+              (keyup)="buscarCarrera(busqueda.value, tipoEvento.value, estadoEvento.value)">
+
+          </div>
+
+          <div class="input-group my-2">
+            <select #tipoEvento class="form-control ng-pristine ng-invalid ng-touched" id="tipoEvento" name="tipoEvento"
+            (change)="buscarCarrera(busqueda.value, tipoEvento.value, estadoEvento.value)">
+              <option value="">Tipo evento...</option>
+              <option value="CARRERA">Carrera</option>
+              <option value="MARCADOR">Marcador</option>
+
+             </select>
+
+          </div>
+
+          <div class="input-group my-2">
+            <select #estadoEvento class="form-control ng-pristine ng-invalid ng-touched" id="estadoEvento" name="estadoEvento"
+            (change)="buscarCarrera(busqueda.value, tipoEvento.value, estadoEvento.value)"> 
+              <option value="">Estado...</option>
+              <option value="1">Abierto</option>
+              <option value="0">Cerrado</option>
+             </select>
+
+          </div>
+
+          <table class="table table-hover mb-0" aria-describedby="colecName">
+            <tbody>
+              <tr *ngFor="let carrera of mostrarCarreras; index as i" (click)="onSelect(carrera, i)"
+                [ngClass]="{'selected': i === indiceSeleccionado}">
+                <td>{{carrera.nombre_evento}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          
+
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <app-carrera-detail [carrera]="carreraSeleccionada"></app-carrera-detail>
+    </div>
+  </div>
+</div>

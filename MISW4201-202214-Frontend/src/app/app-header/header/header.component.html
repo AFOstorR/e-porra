@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" id="btnNavigation" data-bs-target="#navbarTogglerDemo01"
+      aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a class="navbar-brand mx-3" (click)="goTo('logIn')" id="homeEporra">E-Porra</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item" >
+          <a class="nav-link" (click)="goTo('carrera')" id="lnCarreras">Eventos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="goTo('apuesta')" id="lnApuestas">Apuestas</a>
+        </li>
+        <li class="nav-item" *ngIf="usuario.es_apostador">
+          <a class="nav-link" (click)="goTo('perfil')" id="lnPerfil">Perfil</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="usuario.es_apostador">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Monedero
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" (click)="goTo('retirar')" id="lnRetirar" >Retirar dinero</a></li>
+            <li><a class="dropdown-item" (click)="goTo('depositar')" id="lnCargar">Cargar cuenta</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" (click)="goTo('transacciones')" id="lnTransacciones">Ver transacciones</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <div class="col-12">
+          <label class="nav-item dropdown">{{usuario.nombre}}</label>
+          <button (click)="goTo('logIn')" title="Salir" type="button" class="btn btn-outline-secondary" style="border: 0;" id="btnSalir"><i class="bi bi-person-x-fill"></i></button>
+          <div  class="btn-group dropstart" role="group">
+            <button title="Notificaciones" *ngIf="notificaciones.length > 0; else boton" id="btnGroupDrop1" type="button" class="btn btn-success position-relative dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-bell-fill"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                {{notificaciones.length}}
+              </span>
+            </button>
+            <ng-template #boton>
+              <button title="Notificaciones" type="button" class="btn btn-success position-relative"  aria-expanded="false">
+                <i class="bi bi-bell-fill"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                  {{notificaciones.length}}
+                </span>
+              </button>
+            </ng-template>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start" aria-labelledby="btnGroupDrop1">
+              <li *ngFor="let notificacion of notificaciones; let i = index"><a class="dropdown-item">{{notificacion.descripcion}} <button (click)="eliminarNotificacion(i)" title="Eliminar" type="button" class="btn btn-outline-danger" style="border: 0;" id="btnEliminar"><i class="bi bi-trash3"></i></button></a><hr class="dropdown-divider"></li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</nav>

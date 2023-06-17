@@ -1,0 +1,43 @@
+<app-header></app-header>
+<div class="container my-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-12 text-center">
+              <label class="fs-4">Elija el competidor ganador de la carrera
+                <strong>{{carrera?.nombre_evento}}</strong></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br />
+  <form class="mx-5 my-3" [formGroup]="competidorGanadorForm" (ngSubmit)="terminarCarrera(competidorGanadorForm.value)">
+    <div class="row">
+      <div class="col col-2">
+        Competidor ganador:
+      </div>
+      <div class="col col-4">
+        <select formControlName="id_competidor" class="form-control" id="competidor">
+          <option value="">Selecciona un competidor...</option>
+          <option *ngFor="let item of competidores" value="{{ item.id }}">
+            {{ item.nombre_competidor }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-3">
+        <button class="btn btn-danger text-start" (click)="backToDetails()" id="btnCancelar">Cancelar</button>
+      </div>
+      <div class="col-3">
+        <button type="submit" class="btn btn-warning" [disabled]="!competidorGanadorForm.valid" id="btnTerminar">Terminar y ver
+          reporte</button>
+      </div>
+    </div>
+  </form>
+</div>

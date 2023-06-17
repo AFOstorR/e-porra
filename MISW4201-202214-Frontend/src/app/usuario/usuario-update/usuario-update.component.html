@@ -1,0 +1,68 @@
+<app-header></app-header>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-10">
+      <div class="card mx-3 my-5">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="mt-5 mb-2 fs-3 fw-bold">Perfil</p>
+          </div>
+        </div>
+        <form class="mx-5 my-3" [formGroup]="updateForm" (ngSubmit)="updateUsuario(updateForm.value)">
+          <div class="form-group my-2">
+            <div class="row">
+              <div class="col-2 text-start">
+                <label for="id_usuario">Usuario: </label>
+              </div>
+              <div class="col-10">
+                <label>{{usuario.nombre}}</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group my-2">
+            <div class="row">
+              <div class="col-2 text-start">
+                <label>Correo electronico</label>
+              </div>
+              <div class="col-10">
+                <input type="text" class="form-control" formControlName="correo_electronico" placeholder="correo electronico" id="btnCorreoElectronico">
+              </div>
+            </div>
+            <div class="row justify-content-center mt-2">
+              <div class="col-8">
+                <div class="alert alert-danger my-3"
+                  *ngIf="(updateForm.get('correo_electronico')?.hasError('required') || updateForm.controls.correo_electronico.errors?.pattern) && updateForm.get('correo_electronico')?.touched" >
+                  Debe ingresar un correo electronico valido
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-2 text-start">
+                <label>Número de tarjeta</label>
+              </div>
+              <div class="col-10">
+                <input type="text" class="form-control" formControlName="numero_tarjeta" maxlength="16" placeholder="numero de tarjeta" id="btnNumeroTarjeta">
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-8">
+                <div class="alert alert-danger my-3"
+                  *ngIf="(updateForm.get('numero_tarjeta')?.hasError('required') || updateForm.controls.numero_tarjeta.errors?.pattern) && updateForm.get('numero_tarjeta')?.touched">
+                  Debe ingresar los 16 números de la tarjeta
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-6 text-end">
+              <button class="btn btn-danger" (click)="cancelUpdate()" >Cancelar</button>
+            </div>
+            <div class="col-6 text-start">
+              <button type="submit" class="btn btn-warning" [disabled]="!updateForm.valid" id="btnActualizar">Actualizar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
