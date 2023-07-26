@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask,jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
@@ -21,20 +21,24 @@ cors = CORS(app)
 
 api = Api(app)
 
-@app.route("/carrera/<int:idEvento>")
+@app.route("/carrera/<int:idEvento>",methods=["GET"])
 def getCarrera(idEvento):
     return VistaGetCarrera.getCarrera(idEvento)
 
-@app.route("/carreras")
-def getEvento():
-    return VistaGetCarrera.getCarreras()
+@app.route("/carreras",methods=["GET"])
+def getEventos():
+    return jsonify(VistaGetCarrera.getCarreras())
 
-@app.route("/usuario/<int:id_usuario>/carreras")
+@app.route("/usuario/<int:id_usuario>/carreras",methods=["POST"])
 def crearEvento(id_usuario):
     return VistaCrearCarrera.crearCarrera(id_usuario)
 
-@app.route("/carrera/<int:idEvento")
-def editarEvento(idEvento):
+@app.route("/carrera/<int:idEvento>",methods=["DELETE"])
+def eliminarEvento(idEvento):
     return VistaEliminarCarrera.eliminarCarrera(idEvento)
+
+@app.route("/carrera/<int:idEvento>",methods=["PUT"])
+def editarEvento(idEvento):
+    return VistaEditarCarrera.editarCarrera(idEvento)
 
 jwt = JWTManager(app)

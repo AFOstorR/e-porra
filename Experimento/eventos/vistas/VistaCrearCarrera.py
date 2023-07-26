@@ -13,7 +13,7 @@ evento_schema = EventoSchema()
 class VistaCrearCarrera(Resource):
 
     @jwt_required()
-    def crearCarrera(self, id_usuario):
+    def crearCarrera( id_usuario):
         nuevo_evento = Evento(nombre_evento=request.json["nombre"],
                               tipo_evento = request.json['tipo_evento']  
         )

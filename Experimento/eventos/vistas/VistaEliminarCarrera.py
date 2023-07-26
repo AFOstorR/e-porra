@@ -9,9 +9,9 @@ evento_schema = EventoSchema()
 
 class VistaEliminarCarrera(Resource):
     @jwt_required()
-    def eliminarCarrera(self, id_evento):
-        evento = Evento.query.get_or_404(id_evento)
+    def eliminarCarrera(idEvento):
+        evento = Evento.query.get_or_404(idEvento)
         db.session.delete(evento)
         db.session.commit()
-        return '', 204
+        return 'La carrera ha sido eliminada correctamente', 204
 
