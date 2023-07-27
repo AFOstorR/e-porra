@@ -1,0 +1,89 @@
+version: "3.8"
+services:
+  backend:
+    # backend
+    container_name: backend
+    image: backend:1
+    restart: always
+    env_file:
+      - ./.env/entorno.env
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://postgres:postgres@service_db/service_db
+    build:
+      context: ./Backend 
+    ports:
+      - "5000:5000"
+    networks:
+      - db_net
+    depends_on:
+      service_db:
+        condition: service_healthy
+
+  eventos:
+    # ms eventos
+    container_name: eventos
+    image: eventos:1
+    restart: always
+    env_file:
+      - ./.env/entorno.env
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://postgres:postgres@service_db/service_db
+    build:
+      context: ./Experimento/eventos
+    ports:
+      - "5001:5001"
+    networks:
+      - db_net
+    depends_on:
+      service_db:
+        condition: service_healthy
+
+  apuestas:
+    # ms apuestas
+    container_name: apuestas
+    image: apuestas:1
+    restart: always
+    env_file:
+      - ./.env/entorno.env
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://postgres:postgres@service_db/service_db
+    build:
+      context: ./Experimento/ms-apuestas
+    ports: 
+    - '5002:5002'
+    networks:
+      - db_net
+    depends_on:
+      service_db:
+        condition: service_healthy
+
+  service_db:
+    # base de datos
+    container_name: service_db
+    env_file:
+      - ./.env/entorno.env
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    expose:
+        - '5432'
+    environment:
+      POSTGRES_DB: service_db
+    volumes:
+      - my-db1:/var/lib/postgresql
+    networks:
+      - db_net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER" ]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+
+volumes:
+  my-db1:
+
+networks:
+  db_net:
+    driver: bridge
+
