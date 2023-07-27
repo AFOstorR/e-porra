@@ -14,8 +14,6 @@ reporte_schema = ReporteSchema()
 transaccion_schema = TransaccionSchema()
 
 class VistaApuestas(Resource):
-
-    @jwt_required()
     def post(self,id_apostador):
         
         nueva_apuesta = Apuesta(valor_apostado=request.json["valor_apostado"],
@@ -53,7 +51,6 @@ class VistaApuestas(Resource):
         return usuario_schema.dump(Usuario.query.filter(Usuario.id == id_apostador)[0])
         #return apuesta_schema.dump(nueva_apuesta)
 
-    @jwt_required()
     def get(self, id_apostador):
         usuario_actual = Usuario.query.get_or_404(id_apostador)
         

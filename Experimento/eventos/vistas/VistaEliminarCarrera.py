@@ -8,7 +8,7 @@ from modelos import db, CompetidorSchema, Competidor, EventoSchema, Evento
 evento_schema = EventoSchema()
 
 class VistaEliminarCarrera(Resource):
-    @jwt_required()
+
     def eliminarCarrera(idEvento):
         evento = Evento.query.get_or_404(idEvento)
         db.session.delete(evento)

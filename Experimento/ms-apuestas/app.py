@@ -27,5 +27,3 @@ cors = CORS(app)
 api = Api(app)
 api.add_resource(VistaApuestas, '/apuestas/<int:id_apostador>')
 suscriptor.recibirApuesta()
-
-jwt = JWTManager(app)

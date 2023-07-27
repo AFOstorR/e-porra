@@ -180,8 +180,6 @@ class VistaCarrera(Resource):
         return '', 204
 
 class VistaApuestas(Resource):
-
-    @jwt_required()
     def post(self,id_apostador):
         publicador = PublicadorKafka()
         publicador.notificar({'id_apostador': id_apostador, 'request': request.json})

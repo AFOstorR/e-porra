@@ -7,7 +7,7 @@ import datetime as dt
 from modelos import db, CompetidorSchema, Competidor, EventoSchema, Evento
 evento_schema = EventoSchema()
 class VistaEditarCarrera(Resource):
-    @jwt_required()
+
     def editarCarrera(id_evento):
         evento = Evento.query.get_or_404(id_evento)
         evento.nombre_evento = request.json.get("nombre", evento.nombre_evento)

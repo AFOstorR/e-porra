@@ -1,7 +1,6 @@
 import json
 import os
 import datetime as dt
-from google.cloud import pubsub_v1
 from concurrent.futures import TimeoutError
 from modelos import db, Apuesta, Transaccion, TipoTransaccion, Evento, Usuario
 from json import loads
@@ -9,14 +8,10 @@ from kafka import KafkaConsumer
 import os
 
 class ObtenerApuesta:
-    def enviarNotificacion(self):
-        server = os.environ.get('SERVER_KAFKA', None)
-        if server == None:
-            server = 'localhost:9092'
-        
+    def recibirApuesta(self):
         consumer = KafkaConsumer (
             'Notificar',
-            bootstrap_servers = [server],
+            bootstrap_servers=[os.environ.get('BROKER_PATH','')],
             value_deserializer=lambda m: loads(m.decode('utf-8')),
             auto_offset_reset='earliest',
             auto_commit_interval_ms=1000
@@ -25,8 +20,8 @@ class ObtenerApuesta:
             self.crearApuesta(n.value)
     
     def crearApuesta(self, message):
-        apuestaJson = json.loads(message.data)['request']
-        id_apostador = json.loads(message.data)['id_apostador']
+        apuestaJson = message['request']
+        id_apostador = message['id_apostador']
         nueva_apuesta = Apuesta(valor_apostado = apuestaJson["valor_apostado"],
                                 nombre_apostador = apuestaJson["nombre_apostador"],
                                 id_competidor = apuestaJson["id_competidor"] if apuestaJson["id_competidor"] else None, 
@@ -59,5 +54,3 @@ class ObtenerApuesta:
             usuario_administrador.monedero += float(apuestaJson['valor_apostado'])
             db.session.add(transaccion)
         db.session.commit()
-        
-        message.ack()
