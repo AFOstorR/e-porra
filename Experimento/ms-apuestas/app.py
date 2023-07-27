@@ -5,7 +5,7 @@ from flask_restful import Api
 
 from modelos import db
 from vistas import VistaApuestas
-from obtenerApuestas.obtenerApuesta import ObtenerApuesta
+from obtenerApuestas.obtenerApuestaKafka import ObtenerApuesta
 
 suscriptor = ObtenerApuesta()
 app = Flask(__name__)

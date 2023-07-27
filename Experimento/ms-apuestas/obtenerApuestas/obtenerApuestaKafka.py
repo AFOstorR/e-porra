@@ -4,16 +4,25 @@ import datetime as dt
 from google.cloud import pubsub_v1
 from concurrent.futures import TimeoutError
 from modelos import db, Apuesta, Transaccion, TipoTransaccion, Evento, Usuario
+from json import loads
+from kafka import KafkaConsumer
+import os
 
-class ObtenerApuesta():
-    # if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None) is None:
-    #     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credencial_google.json'
-    # timeout = 5.0
-    crepential_path= os.getcwd()+"/"+"grupo-17-cloud-cdb963c560e9.json"
-    
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = crepential_path
-
-    # subscription_path = os.environ.get('GOOGLE_APPLICATION_SUB_APUESTAS', None)
+class ObtenerApuesta:
+    def enviarNotificacion(self):
+        server = os.environ.get('SERVER_KAFKA', None)
+        if server == None:
+            server = 'localhost:9092'
+        
+        consumer = KafkaConsumer (
+            'Notificar',
+            bootstrap_servers = [server],
+            value_deserializer=lambda m: loads(m.decode('utf-8')),
+            auto_offset_reset='earliest',
+            auto_commit_interval_ms=1000
+        )
+        for n in consumer:
+            self.crearApuesta(n.value)
     
     def crearApuesta(self, message):
         apuestaJson = json.loads(message.data)['request']
@@ -52,14 +61,3 @@ class ObtenerApuesta():
         db.session.commit()
         
         message.ack()
-    
-    def recibirApuesta(self):
-        subscriber = pubsub_v1.SubscriberClient()
-        topic_path = subscriber.topic_path("grupo-17-cloud", "Notificacion")
-        streaming_pull_future = subscriber.subscribe(self.subscription_path, callback=self.crearApuesta)
-        with subscriber:
-            try:                
-                streaming_pull_future.result()
-            except TimeoutError:
-                streaming_pull_future.cancel()
-                streaming_pull_future.result()

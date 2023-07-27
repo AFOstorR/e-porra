@@ -6,6 +6,8 @@ from sqlalchemy.exc import IntegrityError
 import datetime as dt
 from modelos import db, Apuesta, ApuestaSchema, Usuario, UsuarioSchema, CompetidorSchema, \
     Competidor, ReporteSchema, EventoSchema, Evento, Transaccion, TransaccionSchema, TipoTransaccion
+from publicador.publicadorKafka import PublicadorKafka
+
 
 apuesta_schema = ApuestaSchema()
 evento_schema = EventoSchema()
@@ -181,41 +183,9 @@ class VistaApuestas(Resource):
 
     @jwt_required()
     def post(self,id_apostador):
-        
-        nueva_apuesta = Apuesta(valor_apostado=request.json["valor_apostado"],
-                                nombre_apostador=request.json["nombre_apostador"],
-                                id_competidor=request.json["id_competidor"] if request.json["id_competidor"] else None, 
-                                id_evento=request.json["id_evento"])
-        
-        db.session.add(nueva_apuesta)
-        fecha_transaccion = dt.datetime.now()
-        transaccion = Transaccion(
-            tipo_transaccion = TipoTransaccion.APUESTA,
-            descripcion = 'Apuesta en evento {}'.format(Evento.query.filter(Evento.id == request.json["id_evento"])[0].nombre_evento),
-            fecha = fecha_transaccion,
-            es_leido = True,
-            valor = - float(request.json['valor_apostado']),
-            id_usuario = id_apostador
-        )
-        db.session.add(transaccion)
-        apostador = Usuario.query.filter(Usuario.id == id_apostador)[0]
-        apostador.monedero -= float(request.json['valor_apostado'])
-        if len(Usuario.query.filter(Usuario.es_apostador == False).all()) > 0:
-            usuario_administrador = Usuario.query.filter(Usuario.es_apostador == False).all()[0]
-            transaccion = Transaccion(
-                tipo_transaccion = TipoTransaccion.APUESTA,
-                descripcion = 'Apuesta en evento {}'.format(Evento.query.filter(Evento.id == request.json["id_evento"])[0].nombre_evento),
-                fecha = fecha_transaccion,
-                es_leido = True,
-                valor = float(request.json['valor_apostado']),
-                id_usuario = usuario_administrador.id
-            )
-            db.session.add(transaccion)
-            usuario_administrador.monedero += float(request.json['valor_apostado'])
-            db.session.add(transaccion)
-        db.session.commit()
-        return usuario_schema.dump(Usuario.query.filter(Usuario.id == id_apostador)[0])
-        #return apuesta_schema.dump(nueva_apuesta)
+        publicador = PublicadorKafka()
+        publicador.notificar({'id_apostador': id_apostador, 'request': request.json})
+
 
     @jwt_required()
     def get(self, id_apostador):
