@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-ENV TZ=America/Bogota 
+ENV TZ=America/Bogota
 
 RUN mkdir -p /home/app
 WORKDIR /home/app
