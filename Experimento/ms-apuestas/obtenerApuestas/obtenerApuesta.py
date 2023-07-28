@@ -9,7 +9,7 @@ class ObtenerApuesta():
     # if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', None) is None:
     #     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'credencial_google.json'
     # timeout = 5.0
-    crepential_path= os.getcwd()+"/"+"grupo-17-cloud-cdb963c560e9.json"
+    crepential_path= os.getcwd()+"/"+"grupo-5-modernizacion-1d4ef81d1d68.json"
     
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = crepential_path
 
@@ -55,8 +55,8 @@ class ObtenerApuesta():
     
     def recibirApuesta(self):
         subscriber = pubsub_v1.SubscriberClient()
-        topic_path = subscriber.topic_path("grupo-17-cloud", "Notificacion")
-        streaming_pull_future = subscriber.subscribe(self.subscription_path, callback=self.crearApuesta)
+        subscription_path = subscriber.subscription_path("grupo-5-modernizacion", "Notificacion-sub")
+        streaming_pull_future = subscriber.subscribe(subscription_path, callback=self.crearApuesta)
         with subscriber:
             try:                
                 streaming_pull_future.result()

@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 import datetime as dt
 from modelos import db, Apuesta, ApuestaSchema, Usuario, UsuarioSchema, CompetidorSchema, \
     Competidor, ReporteSchema, EventoSchema, Evento, Transaccion, TransaccionSchema, TipoTransaccion
-from publicador.publicadorKafka import PublicadorKafka
+from publicador.publicador import PublicadorGoogle as PublicadorKafka
 
 
 apuesta_schema = ApuestaSchema()

@@ -1,0 +1,196 @@
+# Backend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-e-porra
+  labels:
+    app: backend-e-porra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-e-porra
+  template:
+    metadata:
+      labels:
+        app: backend-e-porra
+    spec:
+      containers:
+        - name: backend-e-porra
+          image: us-central1-docker.pkg.dev/grupo-5-modernizacion/uniandes-misw-modernizacion-grupo5/backend-e-porra:1.0
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: "SQLALCHEMY_DATABASE_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: uri
+          ports:
+            - containerPort: 5000
+          imagePullPolicy: Always
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: backend-e-porra-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 5000
+    type: HTTP
+    requestPath: /backend-e-porra/ping
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: servicio-backend-e-porra
+  annotations:
+    cloud.google.com/backend-config: '{"default": "backend-e-porra-config"}'
+spec:
+  type: NodePort
+  selector:
+    app: backend-e-porra
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      nodePort: 31020
+
+---
+# eventos
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventos
+  labels:
+    app: eventos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventos
+  template:
+    metadata:
+      labels:
+        app: eventos
+    spec:
+      containers:
+        - name: eventos
+          image: us-central1-docker.pkg.dev/grupo-5-modernizacion/uniandes-misw-modernizacion-grupo5/mseventos-e-porra:1.0
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: "SQLALCHEMY_DATABASE_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: uri
+          ports:
+            - containerPort: 5001
+          imagePullPolicy: Always
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: eventos-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 5001
+    type: HTTP
+    requestPath: /eventos/ping
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: servicio-eventos
+  annotations:
+    cloud.google.com/backend-config: '{"default": "eventos-config"}'
+spec:
+  type: NodePort
+  selector:
+    app: eventos
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5001
+      nodePort: 31021
+---
+# apuestas
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apuestas
+  labels:
+    app: apuestas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apuestas
+  template:
+    metadata:
+      labels:
+        app: apuestas
+    spec:
+      containers:
+        - name: apuestas  
+          image: us-central1-docker.pkg.dev/grupo-5-modernizacion/uniandes-misw-modernizacion-grupo5/msapuestas-e-porra:1.0
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          env:
+            - name: "SQLALCHEMY_DATABASE_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: appsecrets 
+                  key: uri            
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PROJECT_ID
+              value: "grupo-5-modernizacion"
+          ports:
+            - containerPort: 5002
+          imagePullPolicy: Always
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: apuestas-config
+spec:
+  healthCheck:
+    checkIntervalSec: 30
+    port: 5002
+    type: HTTP
+    requestPath: /verify/ping
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: servicio-apuestas
+  annotations:
+    cloud.google.com/backend-config: '{"default": "apuestas-config"}'
+spec:
+  type: NodePort
+  selector:
+    app: apuestas
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5002
+      nodePort: 31022

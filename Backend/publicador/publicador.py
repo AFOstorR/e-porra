@@ -4,7 +4,7 @@ from flask_restful import Resource
 from google.cloud import pubsub_v1
 
 class PublicadorGoogle(Resource):
-    crepential_path= os.getcwd()+"/"+"grupo-5-modernizacion.json"
+    crepential_path= os.getcwd()+"/"+"grupo-5-modernizacion-1d4ef81d1d68.json"
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = crepential_path
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path("grupo-5-modernizacion", "Notificacion")

@@ -1,0 +1,47 @@
+###################################
+# INGRESS
+###################################
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gateway-ingress-05
+  labels:
+    name: gateway-ingress-05
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: servicio-backend-e-porra
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /carreras
+        backend:
+          service:
+            name: servicio-eventos
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /carrera
+        backend:
+          service:
+            name: servicio-eventos
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /usuario
+        backend:
+          service:
+            name: servicio-eventos
+            port: 
+              number: 80
+      
+      
