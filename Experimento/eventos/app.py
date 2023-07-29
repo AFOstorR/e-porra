@@ -31,7 +31,7 @@ def getCarrera(idEvento):
 def getEventos():
      return VistaGetCarrera().getCarreras()
 
-@app.route("/usuario/<int:id_usuario>/carreras",methods=["POST"])
+@app.route("/carrera/usuario/<int:id_usuario>",methods=["POST"])
 def crearEvento(id_usuario):
     return VistaCrearCarrera().crearCarrera(id_usuario)
 
