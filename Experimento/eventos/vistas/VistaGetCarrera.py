@@ -1,16 +1,23 @@
-import re
-from flask import request
-from flask_jwt_extended import jwt_required, create_access_token
+
+
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
-import datetime as dt
-from modelos import  EventoSchema, Evento
+from servicios.servicioCarreras import ServicioCarrera
+from dto.eventoDTO import EventoDTO,ListEventosDTO
+from dto.errorDTO import ErrorResponse
 
-evento_schema = EventoSchema()
 class VistaGetCarrera(Resource):
+    servicioCarrera=ServicioCarrera()
+    eventoDto=EventoDTO()
+    def getCarrera(self,idEvento):
+        carrera=self.servicioCarrera.getCarrera(idEvento)
+        if(carrera==None):
+            return ErrorResponse().response("Evento no existe") 
+        
+        return self.eventoDto.dump(carrera)
+        
+     
 
-    def getCarrera(id_evento):
-        return evento_schema.dump(Evento.query.get_or_404(id_evento))
-
-    def getCarreras():
-        return [evento_schema.dump( ev )for ev in Evento.query.all()]
+    def getCarreras(self):
+        carreras=self.servicioCarrera.getCarreras()
+        
+        return ListEventosDTO().listaEventos(carreras)

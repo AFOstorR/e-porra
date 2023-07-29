@@ -1,29 +1,18 @@
-import re
-from flask import request
-from flask_jwt_extended import jwt_required, create_access_token
+
+from flask import request,make_response
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
-import datetime as dt
-from modelos import db, CompetidorSchema, Competidor, EventoSchema, Evento
-evento_schema = EventoSchema()
+from dto.errorDTO import ErrorResponse
+from dto.eventoDTO import EventoDTO
+from servicios.servicioCarreras import ServicioCarrera
+
+
 class VistaEditarCarrera(Resource):
-
-    def editarCarrera(id_evento):
-        evento = Evento.query.get_or_404(id_evento)
-        evento.nombre_evento = request.json.get("nombre", evento.nombre_evento)
-        evento.competidores = []
-        evento.tipo_evento = request.json.get("tipo_evento",evento.tipo_evento)
+    servicioCarrera=ServicioCarrera()
+    eventoDto=EventoDTO()
+    def editarCarrera(self,id_evento):
+        carrera=self.servicioCarrera.getCarrera(id_evento)
+        if(carrera==None):
+            return ErrorResponse().response("El evento que desea eliminar no existe")
+        self.servicioCarrera.editCarrera(carrera=carrera,competidores=request.json["competidores"])
         
-        for item in request.json["competidores"]:
-            probabilidad = float(item["probabilidad"])
-            cuota = round((probabilidad / (1 - probabilidad)), 2)
-            competidor = Competidor(nombre_competidor=item["competidor"],
-                                    probabilidad=probabilidad,
-                                    cuota=cuota,
-                                    id_evento=evento.id)
-            evento.competidores.append(competidor)
-
-
-
-        db.session.commit()
-        return evento_schema.dump(evento)
+        return self.eventoDto.dump(carrera)

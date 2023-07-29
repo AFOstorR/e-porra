@@ -1,38 +1,21 @@
-import re
-from flask import request
-from flask_jwt_extended import jwt_required, create_access_token
+
+from flask import request,make_response
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
-import datetime as dt
-from modelos import db, Apuesta, ApuestaSchema, Usuario, UsuarioSchema, CompetidorSchema, \
-    Competidor, ReporteSchema, EventoSchema, Evento, Transaccion, TransaccionSchema, TipoTransaccion
+from dto.errorDTO import ErrorResponse
+from dto.eventoDTO import EventoDTO
+from servicios.servicioCarreras import ServicioCarrera
 
 
-evento_schema = EventoSchema()
+
+
 
 class VistaCrearCarrera(Resource):
-    def crearCarrera( id_usuario):
-        nuevo_evento = Evento(nombre_evento=request.json["nombre"],
-                              tipo_evento = request.json['tipo_evento']  
-        )
-
-        for item in request.json["competidores"]:
-            cuota = round((item["probabilidad"] / (1 - item["probabilidad"])), 2)
-            competidor = Competidor(nombre_competidor=item["competidor"],
-                                    probabilidad=item["probabilidad"],
-                                    cuota=cuota,
-                                    id_evento=nuevo_evento.id)
-            nuevo_evento.competidores.append(competidor)     
+    servicioCarrera=ServicioCarrera()
+    def crearCarrera(self, id_usuario):
+        nuevoEvento=self.servicioCarrera.crearCarrera(request=request,id_usuario=id_usuario)
+        if(nuevoEvento==None):
+            return ErrorResponse().response('El usuario ya tiene un carrera con dicho nombre', 409)
+        return EventoDTO().dump(nuevoEvento)
         
-        usuario = Usuario.query.get_or_404(id_usuario)
-        usuario.eventos.append(nuevo_evento)
-
-        try:
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()
-            return 'El usuario ya tiene un carrera con dicho nombre', 409
-
-        return evento_schema.dump(nuevo_evento)
 
 

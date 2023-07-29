@@ -66,15 +66,7 @@ class Transaccion(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
 
 
-class ApuestaSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Apuesta
-        include_relationships = True
-        include_fk = True
-        load_instance = True
 
-    valor_apostado = fields.String()
-    ganancia = fields.String()
 
 
 class CompetidorSchema(SQLAlchemyAutoSchema):
@@ -87,15 +79,7 @@ class CompetidorSchema(SQLAlchemyAutoSchema):
     cuota = fields.String()
 
 
-class EventoSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Evento
-        include_relationships = True
-        load_instance = True
 
-    competidores = fields.List(fields.Nested(CompetidorSchema()))
-    apuestas = fields.List(fields.Nested(ApuestaSchema()))
-    ganancia_casa = fields.Float()
 
 
 class UsuarioSchema(SQLAlchemyAutoSchema):
@@ -106,9 +90,6 @@ class UsuarioSchema(SQLAlchemyAutoSchema):
         exclude = ('contrasena',)
 
 
-class ReporteSchema(Schema):
-    evento = fields.Nested(EventoSchema())
-    ganancia_casa = fields.Float()
 
 class TransaccionSchema(SQLAlchemyAutoSchema):
     class Meta:
