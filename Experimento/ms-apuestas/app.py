@@ -7,9 +7,7 @@ from flask_restful import Api
 from modelos import db
 from vistas.vistaApuestas import VistaApuestas
 from vistas.vistaApuesta import VistaApuesta
-from obtenerApuestas.obtenerApuesta import ObtenerApuesta
 
-suscriptor = ObtenerApuesta()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI','sqlite:///../../eporra.db')
 
@@ -28,4 +26,3 @@ cors = CORS(app)
 api = Api(app)
 api.add_resource(VistaApuestas, '/apuestas/<int:id_apostador>')
 api.add_resource(VistaApuesta, '/apuesta/<int:id_apuesta>')
-suscriptor.recibirApuesta()
