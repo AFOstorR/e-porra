@@ -93,7 +93,7 @@ echo "Desplegar los container"
 kubectl apply -f deployment/k8s-base-layer-deployment.yaml
 
 echo "Configurando el ingress.ngix"
-#sleep 300
+sleep 300
 
 echo "Desplegar ingress"
 kubectl apply -f deployment/k8s-ingress-deloyment.yaml
