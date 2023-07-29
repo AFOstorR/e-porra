@@ -60,9 +60,6 @@ gcloud sql instances create $INSTANCE_SQL_NAME --database-version=POSTGRES_14 --
 
 export DB_IP=$(gcloud sql instances describe $INSTANCE_SQL_NAME --project $PROJECT --format 'value(ipAddresses.ipAddress)')
 
-echo "Crear pub/sub"
-gcloud pubsub topics create Notificacion --message-retention-duration=1h
-
 echo "Habilitar Kubernetes Engine API"
 gcloud services enable container.googleapis.com
 
