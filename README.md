@@ -10,9 +10,6 @@ Contiene el front de la apliación.
 
 ## Aplicación de gestión de apuestas E-Porra
 
-Nota
-La funcion del bono se encuentra en la carpeta functionCreateFile
-
 ## Despliegue automatico:
 Si esta en una terminal linux o mac, puede realizar los siguientes pasos:
 
