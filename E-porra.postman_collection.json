@@ -1,0 +1,615 @@
+{
+	"info": {
+		"_postman_id": "ba4fcb74-7024-42d1-9e1b-5182a520ec54",
+		"name": "E-porra",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24011815"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Signin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"console.log(email)\r",
+									"pm.collectionVariables.set('USUARIO', email); "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"console.log(jsonData.token)\r",
+									"pm.collectionVariables.set('token', jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\":\"{{USUARIO}}\",\"contrasena\":\"contrasena\",\"es_apostador\":true,\"numero_tarjeta\":\"1234233421\",\"nombre\":\"{{USUARIO}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/signin",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"\r",
+									"pm.collectionVariables.set('token', jsonData.token);\r",
+									"pm.collectionVariables.set('idUsuario',jsonData.usuario.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\":\"{{USUARIO}}\",\"contrasena\":\"contrasena\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Eventos",
+			"item": [
+				{
+					"name": "Crear evento",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let carrera = pm.variables.replaceIn(\"{{$randomWord}}\").toLowerCase();\r",
+									"let comp1= pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"let comp2= pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"pm.collectionVariables.set('carrera', carrera); \r",
+									"pm.collectionVariables.set('comp1', comp1); \r",
+									"pm.collectionVariables.set('comp2', comp2); "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"console.log(jsonData.token)\r",
+									"pm.collectionVariables.set('idCarrera', jsonData.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"hat\",\"tipo_evento\":\"CARRERA\",\"competidores\":[{\"competidor\":\"{{comp1}}\",\"probabilidad\":0.4},{\"competidor\":\"{{comp2}}\",\"probabilidad\":0.6}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/usuario/{{idUsuario}}/carreras",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"usuario",
+								"{{idUsuario}}",
+								"carreras"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtener evento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/carrera/{{idCarrera}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"carrera",
+								"{{idCarrera}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener eventos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/carreras",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"carreras"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar evento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"competidores\": [\r\n        {\r\n            \"competidor\": \"{{comp1}}\",\r\n            \"probabilidad\": 0.4\r\n        },\r\n        {\r\n            \"competidor\": \"{{comp2}} eeditado\",\r\n            \"probabilidad\": 0.6\r\n        }\r\n    ],\r\n    \"nombre\": \"{{carrera}} modificada\",\r\n    \"tipo_evento\": \"CARRERA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/carrera/{{idCarrera}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"carrera",
+								"{{idCarrera}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar evento",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/carrera/{{idCarrera}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"carrera",
+								"{{idCarrera}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Apuestas",
+			"item": [
+				{
+					"name": "Signin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let email = pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"console.log(email)\r",
+									"pm.collectionVariables.set('USUARIO', email); "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"console.log(jsonData.token)\r",
+									"pm.collectionVariables.set('token', jsonData.token);\r",
+									"pm.collectionVariables.set('idApostador',jsonData.usuario.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\":\"{{USUARIO}}\",\"contrasena\":\"contrasena\",\"es_apostador\":true,\"numero_tarjeta\":\"1234233421\",\"nombre\":\"{{USUARIO}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/signin",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"pm.collectionVariables.set('idApostador',jsonData.usuario.id)\r",
+									"pm.collectionVariables.set('token', jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\":\"{{USUARIO}}\",\"contrasena\":\"contrasena\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear evento",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let carrera = pm.variables.replaceIn(\"{{$randomWord}}\").toLowerCase();\r",
+									"let comp1= pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"let comp2= pm.variables.replaceIn(\"{{$randomFirstName}}\").toLowerCase();\r",
+									"pm.collectionVariables.set('carrera', carrera); \r",
+									"pm.collectionVariables.set('comp1', comp1); \r",
+									"pm.collectionVariables.set('comp2', comp2); "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = JSON.parse(responseBody); \r",
+									"console.log(jsonData.token)\r",
+									"pm.collectionVariables.set('idCarrera', jsonData.id);\r",
+									"pm.collectionVariables.set(\"idCompetidor\",jsonData.competidores[0].id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"{{carrera}}\",\"tipo_evento\":\"CARRERA\",\"competidores\":[{\"competidor\":\"{{comp1}}\",\"probabilidad\":0.4},{\"competidor\":\"{{comp2}}\",\"probabilidad\":0.6}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/usuario/1/carreras",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"usuario",
+								"1",
+								"carreras"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar apuesta",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set('randomNumber', Math.floor(Math.random() * 1000));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"valor_apostado\": {{randomNumber}},\r\n    \"nombre_apostador\": \"{{USUARIO}}\",\r\n    \"id_competidor\": {{idCompetidor}},\r\n    \"id_evento\": {{idCarrera}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5002/apuestas/{{idApostador}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"apuestas",
+								"{{idApostador}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener apuestas de la carrera",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5001/carrera/{{idCarrera}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"carrera",
+								"{{idCarrera}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtener apuesta",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5002/apuestas/{{idApostador}}",
+							"host": [
+								"localhost"
+							],
+							"port": "5002",
+							"path": [
+								"apuestas",
+								"{{idApostador}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "usuario",
+			"value": ""
+		},
+		{
+			"key": "USUARIO",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "carrera",
+			"value": ""
+		},
+		{
+			"key": "comp1",
+			"value": ""
+		},
+		{
+			"key": "comp2",
+			"value": ""
+		},
+		{
+			"key": "idC",
+			"value": ""
+		},
+		{
+			"key": "randomNumber",
+			"value": ""
+		},
+		{
+			"key": "idApostador",
+			"value": ""
+		},
+		{
+			"key": "idCarrera",
+			"value": ""
+		},
+		{
+			"key": "idCompetidor",
+			"value": ""
+		},
+		{
+			"key": "idUsuario",
+			"value": ""
+		}
+	]
+}
