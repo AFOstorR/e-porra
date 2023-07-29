@@ -25,7 +25,7 @@ export class CarreraService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     })
-    return this.http.post<Evento>(`${this.backUrl}/usuario/${idUsuario}/carreras`, carrera, { headers: headers })
+    return this.http.post<Evento>(`${this.backUrl}/carrera/usuario/${idUsuario}`, carrera, { headers: headers })
   }
 
   getCarrera(idCarrera: number, token: string): Observable<Evento> {
