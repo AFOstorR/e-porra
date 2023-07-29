@@ -1,7 +1,6 @@
 from email.policy import default
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow import fields, Schema
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 import enum
 
 db = SQLAlchemy()
@@ -65,53 +64,3 @@ class Transaccion(db.Model):
     valor = db.Column(db.Float)
     id_usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
 
-
-class ApuestaSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Apuesta
-        include_relationships = True
-        include_fk = True
-        load_instance = True
-
-    valor_apostado = fields.String()
-    ganancia = fields.String()
-
-
-class CompetidorSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Competidor
-        include_relationships = True
-        load_instance = True
-
-    probabilidad = fields.String()
-    cuota = fields.String()
-
-
-class EventoSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Evento
-        include_relationships = True
-        load_instance = True
-
-    competidores = fields.List(fields.Nested(CompetidorSchema()))
-    apuestas = fields.List(fields.Nested(ApuestaSchema()))
-    ganancia_casa = fields.Float()
-
-
-class UsuarioSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Usuario
-        include_relationships = True
-        load_instance = True
-        exclude = ('contrasena',)
-
-
-class ReporteSchema(Schema):
-    evento = fields.Nested(EventoSchema())
-    ganancia_casa = fields.Float()
-
-class TransaccionSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = Transaccion
-        include_relationships = True
-        load_instance = True
