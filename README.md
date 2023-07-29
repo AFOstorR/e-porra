@@ -1,14 +1,19 @@
 # e-porra
-Carpeta Experimento: Contiene las dos funcionalidades refactorizadas.
-Carpeta Backend: Contiene el backend de e-porra original
-Carpeta FrontEnd: Contiene el front de la apliación.
+
+## Carpeta Experimento: 
+Contiene las dos funcionalidades refactorizadas.
+## Carpeta Backend: 
+Contiene el backend de e-porra original
+## Carpeta FrontEnd: 
+Contiene el front de la apliación.
 
 
-Aplicación de gestión de apuestas E-Porra
+## Aplicación de gestión de apuestas E-Porra
+
 Nota
 La funcion del bono se encuentra en la carpeta functionCreateFile
 
-Despliegue automatico:
+## Despliegue automatico:
 Si esta en una terminal linux o mac, puede realizar los siguientes pasos:
 
 Abra el archivo desplegar.sh que se encuentra en este repositorio.
