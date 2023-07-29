@@ -5,7 +5,8 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
 from modelos import db
-from vistas import VistaApuestas
+from vistas.vistaApuestas import VistaApuestas
+from vistas.vistaApuesta import VistaApuesta
 from obtenerApuestas.obtenerApuesta import ObtenerApuesta
 
 suscriptor = ObtenerApuesta()
@@ -26,4 +27,5 @@ cors = CORS(app)
 
 api = Api(app)
 api.add_resource(VistaApuestas, '/apuestas/<int:id_apostador>')
+api.add_resource(VistaApuesta, '/apuesta/<int:id_apuesta>')
 suscriptor.recibirApuesta()
