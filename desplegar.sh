@@ -60,9 +60,6 @@ gcloud sql instances create $INSTANCE_SQL_NAME --database-version=POSTGRES_14 --
 
 export DB_IP=$(gcloud sql instances describe $INSTANCE_SQL_NAME --project $PROJECT --format 'value(ipAddresses.ipAddress)')
 
-echo "Crear pub/sub"
-gcloud pubsub topics create Notificacion --message-retention-duration=1h
-
 echo "Habilitar Kubernetes Engine API"
 gcloud services enable container.googleapis.com
 
@@ -93,7 +90,7 @@ echo "Desplegar los container"
 kubectl apply -f deployment/k8s-base-layer-deployment.yaml
 
 echo "Configurando el ingress.ngix"
-#sleep 300
+sleep 300
 
 echo "Desplegar ingress"
 kubectl apply -f deployment/k8s-ingress-deloyment.yaml

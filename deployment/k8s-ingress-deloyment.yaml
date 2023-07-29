@@ -37,11 +37,24 @@ spec:
             port: 
               number: 80
       - pathType: Prefix
-        path: /usuario
+        path: /carrera/usuario
         backend:
           service:
             name: servicio-eventos
             port: 
               number: 80
-      
+      - pathType: Prefix
+        path: /apuesta
+        backend:
+          service:
+            name: servicio-apuestas
+            port: 
+              number: 80
+      - pathType: Prefix
+        path: /apuestas
+        backend:
+          service:
+            name: servicio-apuestas
+            port: 
+              number: 80
       
