@@ -1,14 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Apuesta } from './apuesta';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApuestaService {
-  private backUrl: string = "http://127.0.0.1:5002"
-
+  private backUrl: string = environment.ingressUrl
   constructor(private http: HttpClient) { }
 
   getApuestas(token: string, usuarioId: number): Observable<Apuesta[]> {

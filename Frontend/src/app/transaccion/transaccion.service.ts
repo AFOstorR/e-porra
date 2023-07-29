@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Usuario } from '../usuario/usuario';
 import { Transaccion } from '../transaccion/transaccion'
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { Transaccion } from '../transaccion/transaccion'
 
 export class TransaccionService {
 
-  private backUrl: string = "http://127.0.0.1:5000"
+  private backUrl: string = environment.ingressUrl
 
   constructor(private http: HttpClient) { }
 

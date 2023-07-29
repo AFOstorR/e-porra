@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Evento, Competidor } from './carrera';
+import {environment} from 'src/environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { Evento, Competidor } from './carrera';
 
 export class CarreraService {
 
-  private backUrl: string = "http://127.0.0.1:5001"
+  private backUrl: string = environment.ingressUrl;
 
 
   constructor(private http: HttpClient) { }
