@@ -10,7 +10,7 @@ import { Transaccion } from '../transaccion/transaccion'
 
 export class TransaccionService {
 
-  private backUrl: string = "https://e-porra-grupo11.herokuapp.com/"
+  private backUrl: string = "http://127.0.0.1:5000"
 
   constructor(private http: HttpClient) { }
 
